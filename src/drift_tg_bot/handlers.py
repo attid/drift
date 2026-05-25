@@ -34,7 +34,12 @@ def create_router(
         if not text or not policy.should_handle(incoming):
             return
 
-        prompt = normalize_prompt(text, bot_username)
+        prompt = build_prompt(
+            text=text,
+            bot_username=bot_username,
+            reply_text=_reply_text(message),
+            include_reply_context=_should_include_reply_context(message),
+        )
         if not prompt:
             return
 
@@ -63,6 +68,41 @@ def _is_reply_to_bot(message: Message) -> bool:
     reply = message.reply_to_message
     reply_from = reply.from_user if reply else None
     return bool(reply_from and reply_from.is_bot and reply_from.id == message.bot.id)
+
+
+def _reply_text(message: Message) -> str | None:
+    reply = message.reply_to_message
+    if not reply:
+        return None
+    text = reply.text or reply.caption
+    return text.strip() if text else None
+
+
+def _should_include_reply_context(message: Message) -> bool:
+    reply = message.reply_to_message
+    if not reply or not _is_reply_to_bot(message):
+        return True
+    return abs(message.message_id - reply.message_id) > 10
+
+
+def build_prompt(
+    *,
+    text: str,
+    bot_username: str,
+    reply_text: str | None,
+    include_reply_context: bool,
+) -> str:
+    user_text = normalize_prompt(text, bot_username)
+    if not reply_text or not include_reply_context:
+        return user_text
+
+    return (
+        "Пользователь ответил на сообщение в Telegram.\n\n"
+        "Сообщение, на которое ответили:\n"
+        f"{reply_text}\n\n"
+        "Комментарий пользователя:\n"
+        f"{user_text}"
+    )
 
 
 async def _get_or_create_conversation(
