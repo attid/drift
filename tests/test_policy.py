@@ -59,5 +59,23 @@ def test_group_chat_ignores_messages_without_mention() -> None:
     assert not policy.should_handle(message)
 
 
+def test_group_chat_accepts_reply_to_bot_without_mention() -> None:
+    policy = MessagePolicy(
+        allowed_user_ids=frozenset({10}),
+        allowed_group_chat_ids=frozenset({-100}),
+        bot_username="drift_bot",
+    )
+
+    message = IncomingMessage(
+        chat_id=-100,
+        chat_type="group",
+        from_user_id=10,
+        text="продолжи",
+        is_reply_to_bot=True,
+    )
+
+    assert policy.should_handle(message)
+
+
 def test_normalize_prompt_removes_bot_mention() -> None:
     assert normalize_prompt("@drift_bot расскажи статус", "drift_bot") == "расскажи статус"

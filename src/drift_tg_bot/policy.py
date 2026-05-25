@@ -9,6 +9,7 @@ class IncomingMessage:
     chat_type: str
     from_user_id: int | None
     text: str
+    is_reply_to_bot: bool = False
 
 
 def normalize_prompt(text: str, bot_username: str) -> str:
@@ -40,7 +41,7 @@ class MessagePolicy:
         if message.chat_type in GROUP_CHAT_TYPES:
             return (
                 message.chat_id in self._allowed_group_chat_ids
-                and self._has_bot_mention(message.text)
+                and (self._has_bot_mention(message.text) or message.is_reply_to_bot)
             )
 
         return False

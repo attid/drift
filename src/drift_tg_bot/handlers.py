@@ -29,6 +29,7 @@ def create_router(
             chat_type=message.chat.type,
             from_user_id=message.from_user.id if message.from_user else None,
             text=text,
+            is_reply_to_bot=_is_reply_to_bot(message),
         )
         if not text or not policy.should_handle(incoming):
             return
@@ -56,6 +57,12 @@ def create_router(
             await message.answer("Drift returned an empty response.")
 
     return router
+
+
+def _is_reply_to_bot(message: Message) -> bool:
+    reply = message.reply_to_message
+    reply_from = reply.from_user if reply else None
+    return bool(reply_from and reply_from.is_bot and reply_from.id == message.bot.id)
 
 
 async def _get_or_create_conversation(
