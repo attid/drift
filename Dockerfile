@@ -23,4 +23,4 @@ RUN uv sync --locked --no-dev
 USER app
 VOLUME ["/data"]
 
-CMD ["uv", "run", "--no-dev", "drift-tg-bot"]
+CMD ["/app/.venv/bin/drift-tg-bot"]
