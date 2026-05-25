@@ -1,0 +1,39 @@
+[project]
+name = "drift-telegram-bridge"
+version = "0.1.0"
+description = "Telegram bridge for Neuraldeep Drift API"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiogram>=3.20,<4",
+    "httpx>=0.28,<0.29",
+    "pydantic-settings>=2.9,<3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3,<9",
+    "pytest-asyncio>=0.26,<0.27",
+    "ruff>=0.11,<0.12",
+]
+
+[project.scripts]
+drift-tg-bot = "drift_tg_bot.main:run"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/drift_tg_bot"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]

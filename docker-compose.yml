@@ -1,0 +1,18 @@
+services:
+  drift-tg-bot:
+    build: .
+    restart: unless-stopped
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:?TELEGRAM_BOT_TOKEN is required}
+      DRIFT_API_TOKEN: ${DRIFT_API_TOKEN:?DRIFT_API_TOKEN is required}
+      ALLOWED_USER_IDS: ${ALLOWED_USER_IDS:?ALLOWED_USER_IDS is required}
+      ALLOWED_GROUP_CHAT_IDS: ${ALLOWED_GROUP_CHAT_IDS:?ALLOWED_GROUP_CHAT_IDS is required}
+      DRIFT_BASE_URL: ${DRIFT_BASE_URL:-https://drift.neuraldeep.ru/v1}
+      DRIFT_MODEL: ${DRIFT_MODEL:-gpt-oss-120b}
+      SQLITE_PATH: /data/bot.sqlite3
+      REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS:-180}
+    volumes:
+      - drift_tg_data:/data
+
+volumes:
+  drift_tg_data:
