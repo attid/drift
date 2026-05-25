@@ -35,7 +35,8 @@ export DRIFT_API_TOKEN="dft_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 export ALLOWED_USER_IDS="123456789,987654321"
 export ALLOWED_GROUP_CHAT_IDS="-1001234567890"
 
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 docker compose logs -f
 ```
 

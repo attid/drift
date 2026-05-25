@@ -1,6 +1,6 @@
 services:
   drift-tg-bot:
-    build: .
+    image: ghcr.io/attid/drift:latest
     restart: unless-stopped
     environment:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:?TELEGRAM_BOT_TOKEN is required}
